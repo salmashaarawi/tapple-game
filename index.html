@@ -76,20 +76,27 @@
         <span class="turn-label">Now answering</span>
         <span class="turn-player" id="turn-player">—</span>
       </div>
-      <div class="timer-wrap">
-        <svg class="timer-ring" viewBox="0 0 120 120">
-          <circle class="timer-ring-bg" cx="60" cy="60" r="52"></circle>
-          <circle class="timer-ring-fg" id="timer-ring-fg" cx="60" cy="60" r="52"></circle>
-        </svg>
-        <div class="timer-num" id="timer-num">10</div>
-      </div>
     </div>
 
     <div id="requirement-banner" class="requirement-banner" hidden>
       Overtime! Name <span id="requirement-count">2</span> answers this turn.
     </div>
 
-    <div class="letters-grid" id="letters-grid"></div>
+    <div class="wheel-wrap">
+      <div class="wheel" id="wheel">
+        <div class="letters-grid" id="letters-grid"></div>
+        <button id="btn-pass-turn" class="pass-btn" type="button">
+          <svg class="timer-ring" viewBox="0 0 120 120">
+            <circle class="timer-ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle class="timer-ring-fg" id="timer-ring-fg" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="pass-btn-inner">
+            <div class="timer-num" id="timer-num">10</div>
+            <div class="pass-label" id="pass-label">TAP A LETTER</div>
+          </div>
+        </button>
+      </div>
+    </div>
 
     <div class="game-controls">
       <button id="btn-pass-fail" class="btn btn-danger" type="button">This player can't answer</button>

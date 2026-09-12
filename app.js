@@ -18,6 +18,7 @@
   let currentCategory = "";
   let lastCategory = "";
   let history = [];         // stack of {letter} for undo
+  let wheelOrder = LETTERS.slice(); // scrambled letter order, fixed for the whole game
 
   let timerDeadline = 0;
   let timerRemaining = settings.timer;
@@ -45,7 +46,11 @@
   const timerNumEl = document.getElementById("timer-num");
   const requirementBanner = document.getElementById("requirement-banner");
   const requirementCountEl = document.getElementById("requirement-count");
+  const wheelWrapEl = document.querySelector(".wheel-wrap");
+  const wheelEl = document.getElementById("wheel");
   const lettersGridEl = document.getElementById("letters-grid");
+  const btnPassTurn = document.getElementById("btn-pass-turn");
+  const passLabelEl = document.getElementById("pass-label");
 
   const btnPassFail = document.getElementById("btn-pass-fail");
   const btnUndo = document.getElementById("btn-undo");
@@ -170,10 +175,20 @@
   });
 
   // ---------------- Game flow ----------------
+  function shuffled(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
   function startGame() {
     turnOrder = players.map((p) => p.id);
     turnPointer = 0;
     lastCategory = "";
+    wheelOrder = shuffled(LETTERS);
     switchScreen(screenGame);
     startRound();
   }
@@ -263,16 +278,54 @@
     turnPlayerEl.textContent = p ? p.name : "—";
     requirementBanner.hidden = requirement <= 1;
     if (requirement > 1) requirementCountEl.textContent = String(requirement - progressThisTurn);
+    renderPassButton();
+  }
+
+  function renderPassButton() {
+    const remaining = requirement - progressThisTurn;
+    if (remaining > 0) {
+      passLabelEl.textContent = requirement > 1
+        ? `${remaining} MORE`
+        : "TAP A LETTER";
+      btnPassTurn.classList.remove("ready");
+    } else {
+      passLabelEl.textContent = "PASS →";
+      btnPassTurn.classList.add("ready");
+    }
+  }
+
+  function computeWheelSize() {
+    const availW = wheelWrapEl.clientWidth - 16;
+    const availH = wheelWrapEl.clientHeight - 16;
+    return Math.max(220, Math.min(availW, availH, 640));
   }
 
   function renderLetters() {
     lettersGridEl.innerHTML = "";
-    LETTERS.forEach((L) => {
+    const size = computeWheelSize();
+    wheelEl.style.width = size + "px";
+    wheelEl.style.height = size + "px";
+
+    const center = size / 2;
+    const radius = size * 0.42;
+    const btnSize = size * 0.1;
+    const fontSize = btnSize * 0.42;
+
+    wheelOrder.forEach((L, i) => {
+      const angle = (2 * Math.PI * i) / wheelOrder.length - Math.PI / 2;
+      const x = center + radius * Math.cos(angle);
+      const y = center + radius * Math.sin(angle);
+
       const btn = document.createElement("button");
       btn.className = "letter-btn";
       btn.textContent = L;
       btn.type = "button";
       btn.dataset.letter = L;
+      btn.style.left = x + "px";
+      btn.style.top = y + "px";
+      btn.style.width = btnSize + "px";
+      btn.style.height = btnSize + "px";
+      btn.style.fontSize = fontSize + "px";
       if (usedLetters.has(L)) {
         btn.classList.add("used");
         btn.disabled = true;
@@ -280,6 +333,12 @@
       btn.addEventListener("click", () => onLetterTap(L, btn));
       lettersGridEl.appendChild(btn);
     });
+
+    const passSize = size * 0.4;
+    btnPassTurn.style.width = passSize + "px";
+    btnPassTurn.style.height = passSize + "px";
+    timerNumEl.style.fontSize = passSize * 0.26 + "px";
+    passLabelEl.style.fontSize = passSize * 0.11 + "px";
   }
 
   function onLetterTap(letter, btnEl) {
@@ -305,11 +364,17 @@
       renderLetters();
     }
 
-    if (progressThisTurn >= requirement) {
-      advanceTurn();
-    } else {
-      renderTurn();
+    renderTurn();
+  }
+
+  function attemptPassTurn() {
+    if (roundOver || paused) return;
+    if (progressThisTurn < requirement) {
+      btnPassTurn.classList.add("shake");
+      setTimeout(() => btnPassTurn.classList.remove("shake"), 300);
+      return;
     }
+    advanceTurn();
   }
 
   function advanceTurn() {
@@ -413,6 +478,8 @@
   }
 
   // ---------------- Controls ----------------
+  btnPassTurn.addEventListener("click", attemptPassTurn);
+
   btnPassFail.addEventListener("click", () => {
     if (roundOver || paused) return;
     stopTimer();
@@ -477,12 +544,26 @@
   // ---------------- Keyboard support (desktop testing) ----------------
   window.addEventListener("keydown", (e) => {
     if (!screenGame.classList.contains("active") || roundOver || paused) return;
+    if (e.key === "Enter" || e.key === " ") {
+      attemptPassTurn();
+      return;
+    }
     const k = e.key.toUpperCase();
     if (LETTERS.includes(k)) {
       const btn = lettersGridEl.querySelector(`[data-letter="${k}"]`);
       if (btn && !btn.disabled) onLetterTap(k, btn);
     }
   });
+
+  // Re-layout the letter wheel when the viewport size/orientation changes
+  let resizeRaf = null;
+  function scheduleWheelRelayout() {
+    if (!screenGame.classList.contains("active")) return;
+    if (resizeRaf) cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(renderLetters);
+  }
+  window.addEventListener("resize", scheduleWheelRelayout);
+  window.addEventListener("orientationchange", scheduleWheelRelayout);
 
   // Prevent double-tap-to-zoom / accidental scroll bounce on iPad
   document.addEventListener("gesturestart", (e) => e.preventDefault());

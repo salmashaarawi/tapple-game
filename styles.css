@@ -261,46 +261,16 @@ button {
 .turn-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 8px 14px;
   flex: none;
   gap: 16px;
+  text-align: center;
 }
 
 .turn-info { display: flex; flex-direction: column; gap: 2px; }
 .turn-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 .turn-player { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; }
-
-.timer-wrap {
-  position: relative;
-  width: 84px;
-  height: 84px;
-  flex: none;
-}
-.timer-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
-.timer-ring-bg {
-  fill: none;
-  stroke: var(--panel-2);
-  stroke-width: 10;
-}
-.timer-ring-fg {
-  fill: none;
-  stroke: var(--good);
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-dasharray: 326.7;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.2s linear, stroke 0.2s linear;
-}
-.timer-num {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  font-weight: 900;
-}
 
 .requirement-banner {
   margin: 0 14px 8px;
@@ -313,22 +283,32 @@ button {
   flex: none;
 }
 
-.letters-grid {
+.wheel-wrap {
   flex: 1;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  padding: 10px 14px;
-  align-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.wheel {
+  position: relative;
+  flex: none;
+}
+
+.letters-grid {
+  display: contents;
 }
 
 .letter-btn {
-  aspect-ratio: 1 / 1;
-  border-radius: 14px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
   border: none;
   background: var(--letter-idle);
   color: var(--text);
-  font-size: clamp(1.3rem, 3.4vw, 2rem);
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -336,7 +316,7 @@ button {
   justify-content: center;
   transition: transform .08s ease, background .15s ease, opacity .15s ease;
 }
-.letter-btn:active:not(:disabled) { transform: scale(0.9); }
+.letter-btn:active:not(:disabled) { transform: translate(-50%, -50%) scale(0.88); }
 
 .letter-btn.used {
   background: var(--letter-off);
@@ -350,8 +330,87 @@ button {
 }
 
 @keyframes pop {
-  0% { transform: scale(1); background: var(--good); color: #06281a; }
-  100% { transform: scale(1); }
+  0% { transform: translate(-50%, -50%) scale(1); background: var(--good); color: #06281a; }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.pass-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: none;
+  background: var(--panel-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px #00000040;
+  transition: background .2s ease, transform .08s ease;
+}
+.pass-btn:active { transform: translate(-50%, -50%) scale(0.96); }
+
+.pass-btn .timer-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.timer-ring-bg {
+  fill: none;
+  stroke: #ffffff18;
+  stroke-width: 8;
+}
+.timer-ring-fg {
+  fill: none;
+  stroke: var(--good);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 326.7;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s linear, stroke 0.2s linear;
+}
+
+.pass-btn-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 10%;
+  text-align: center;
+}
+.timer-num {
+  font-weight: 900;
+  line-height: 1;
+}
+.pass-label {
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  line-height: 1.15;
+}
+
+.pass-btn.ready {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+.pass-btn.ready .pass-label { color: #1a1425; }
+.pass-btn.ready .timer-num { color: #1a1425; }
+.pass-btn.ready { animation: pulse 1.4s ease-in-out infinite; }
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 6px 20px #00000040, 0 0 0 0 #ff5f6d55; }
+  50% { box-shadow: 0 6px 20px #00000040, 0 0 0 14px #ff5f6d00; }
+}
+
+.pass-btn.shake { animation: shake 0.3s ease; }
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0); }
+  25% { transform: translate(-50%, -50%) rotate(-4deg); }
+  75% { transform: translate(-50%, -50%) rotate(4deg); }
 }
 
 .game-controls {
@@ -397,14 +456,7 @@ button {
   .category-bar { width: calc(50% - 18px); }
   .turn-bar { width: calc(50% - 18px); }
   .requirement-banner { width: calc(100% - 28px); }
-  .letters-grid {
-    width: 100%;
-    grid-template-columns: repeat(9, 1fr);
-  }
+  .wheel-wrap { width: 100%; }
   .game-controls { grid-template-columns: repeat(4, 1fr); }
   .game-controls .btn-danger { grid-column: span 1; }
-}
-
-@media (min-width: 700px) and (orientation: portrait) {
-  .letters-grid { grid-template-columns: repeat(6, 1fr); }
 }
