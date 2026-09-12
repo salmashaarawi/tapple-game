@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#171423" />
+<title>Tapple — Digital</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon-192.svg" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ SETUP SCREEN ============ -->
+  <section id="screen-setup" class="screen active">
+    <div class="setup-wrap">
+      <h1 class="logo">TAPPLE<span class="logo-dot">.</span></h1>
+      <p class="tagline">The fast-talking category game</p>
+
+      <div class="card">
+        <h2>Players</h2>
+        <div id="player-list" class="player-list"></div>
+        <button id="btn-add-player" class="btn btn-ghost" type="button">+ Add player</button>
+      </div>
+
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="setting-row">
+          <label for="timer-select">Turn timer</label>
+          <select id="timer-select">
+            <option value="7">7 seconds</option>
+            <option value="10" selected>10 seconds</option>
+            <option value="15">15 seconds</option>
+            <option value="20">20 seconds</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="target-select">Cards to win</label>
+          <select id="target-select">
+            <option value="1">1 card</option>
+            <option value="2">2 cards</option>
+            <option value="3" selected>3 cards</option>
+            <option value="5">5 cards</option>
+            <option value="99">Play forever</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="sound-toggle">Sound</label>
+          <input type="checkbox" id="sound-toggle" checked />
+        </div>
+      </div>
+
+      <button id="btn-start" class="btn btn-primary btn-big" type="button">Start Game</button>
+    </div>
+  </section>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <section id="screen-game" class="screen">
+
+    <header class="scoreboard" id="scoreboard"></header>
+
+    <div class="category-bar">
+      <div class="category-label">CATEGORY</div>
+      <div class="category-name" id="category-name">—</div>
+      <button id="btn-new-category" class="btn btn-icon" title="Shuffle category" type="button">🔀</button>
+    </div>
+
+    <div class="turn-bar">
+      <div class="turn-info">
+        <span class="turn-label">Now answering</span>
+        <span class="turn-player" id="turn-player">—</span>
+      </div>
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 120 120">
+          <circle class="timer-ring-bg" cx="60" cy="60" r="52"></circle>
+          <circle class="timer-ring-fg" id="timer-ring-fg" cx="60" cy="60" r="52"></circle>
+        </svg>
+        <div class="timer-num" id="timer-num">10</div>
+      </div>
+    </div>
+
+    <div id="requirement-banner" class="requirement-banner" hidden>
+      Overtime! Name <span id="requirement-count">2</span> answers this turn.
+    </div>
+
+    <div class="letters-grid" id="letters-grid"></div>
+
+    <div class="game-controls">
+      <button id="btn-pass-fail" class="btn btn-danger" type="button">This player can't answer</button>
+      <button id="btn-undo" class="btn btn-ghost" type="button">Undo last tap</button>
+      <button id="btn-pause" class="btn btn-ghost" type="button">Pause</button>
+      <button id="btn-quit" class="btn btn-ghost" type="button">End game</button>
+    </div>
+  </section>
+
+  <!-- ============ ROUND WIN OVERLAY ============ -->
+  <div id="overlay-round" class="overlay" hidden>
+    <div class="overlay-card">
+      <div class="overlay-emoji">🏆</div>
+      <h2 id="round-winner-text">Player wins the round!</h2>
+      <p id="round-winner-sub"></p>
+      <button id="btn-next-round" class="btn btn-primary btn-big" type="button">Next Round</button>
+    </div>
+  </div>
+
+  <!-- ============ GAME WIN OVERLAY ============ -->
+  <div id="overlay-game" class="overlay" hidden>
+    <div class="overlay-card">
+      <div class="overlay-emoji">🎉</div>
+      <h2 id="game-winner-text">Player wins the game!</h2>
+      <button id="btn-play-again" class="btn btn-primary btn-big" type="button">Play Again</button>
+    </div>
+  </div>
+
+  <!-- ============ PAUSE OVERLAY ============ -->
+  <div id="overlay-pause" class="overlay" hidden>
+    <div class="overlay-card">
+      <h2>Paused</h2>
+      <button id="btn-resume" class="btn btn-primary btn-big" type="button">Resume</button>
+      <button id="btn-quit-2" class="btn btn-ghost" type="button">End game</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="categories.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

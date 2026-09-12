@@ -1,0 +1,12 @@
+{
+  "name": "Tapple — Digital",
+  "short_name": "Tapple",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#171423",
+  "theme_color": "#171423",
+  "icons": [
+    { "src": "icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
