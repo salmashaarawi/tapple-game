@@ -202,19 +202,19 @@ button {
 /* ---------- Game screen ---------- */
 .scoreboard {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   overflow-x: auto;
-  padding: 12px 14px 6px;
+  padding: 8px 10px 4px;
   flex: none;
 }
 
 .score-chip {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--panel);
   border-radius: 999px;
-  padding: 8px 14px 8px 10px;
+  padding: 5px 12px 5px 8px;
   flex: none;
   border: 2px solid transparent;
   opacity: 0.55;
@@ -232,48 +232,39 @@ button {
   text-decoration: line-through;
 }
 
-.score-chip .swatch { width: 12px; height: 12px; border-radius: 50%; flex: none; }
-.score-chip .name { font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
-.score-chip .cards { font-size: 0.85rem; color: var(--text-dim); white-space: nowrap; }
+.score-chip .swatch { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.score-chip .name { font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
+.score-chip .cards { font-size: 0.75rem; color: var(--text-dim); white-space: nowrap; }
 
-.category-bar {
+.status-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: var(--panel);
-  margin: 4px 14px;
-  padding: 14px 16px;
-  border-radius: var(--radius);
+  margin: 4px 10px;
+  padding: 8px 12px;
+  border-radius: 14px;
   flex: none;
 }
-.category-label {
-  font-size: 0.7rem;
-  letter-spacing: 1.5px;
+.status-item { min-width: 0; flex: 1; }
+.status-item-right { text-align: right; }
+.status-label {
+  font-size: 0.62rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
   color: var(--text-dim);
   font-weight: 800;
 }
-.category-name {
-  flex: 1;
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
+.status-value {
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
   font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-.turn-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px 14px;
-  flex: none;
-  gap: 16px;
-  text-align: center;
-}
-
-.turn-info { display: flex; flex-direction: column; gap: 2px; }
-.turn-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-.turn-player { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; }
 
 .requirement-banner {
-  margin: 0 14px 8px;
+  margin: 0 10px 6px;
   background: var(--accent);
   color: #1a1425;
   text-align: center;
@@ -288,7 +279,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 14px;
+  padding: 4px 8px;
   min-height: 0;
   overflow: hidden;
 }
@@ -323,6 +314,11 @@ button {
   color: var(--text-dim);
   opacity: 0.35;
   cursor: default;
+}
+
+.wheel.locked .letter-btn:not(.used) {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .letter-btn.just-used {
@@ -414,13 +410,19 @@ button {
 }
 
 .game-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 10px 14px calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 10px calc(8px + env(safe-area-inset-bottom));
   flex: none;
 }
-.game-controls .btn-danger { grid-column: 1 / -1; }
+.game-controls .btn-danger { padding: 10px 20px; font-size: 0.9rem; }
+.game-controls-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.game-controls-row .btn { padding: 8px 10px; font-size: 0.82rem; }
 
 /* ---------- Overlays ---------- */
 .overlay {
@@ -449,14 +451,48 @@ button {
 .overlay-card p { color: var(--text-dim); margin: 0 0 20px; }
 .overlay-card .btn { margin-top: 10px; }
 
+.leaderboard-card { max-width: 480px; text-align: left; }
+.leaderboard-card h2 { text-align: center; }
+.leaderboard-sub {
+  text-align: center;
+  font-size: 0.8rem;
+  margin: 0 0 16px;
+}
+
+.leaderboard-list {
+  max-height: 45vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.leaderboard-row:nth-child(1) { border: 1px solid #ffc37155; }
+
+.lb-rank { font-weight: 900; color: var(--text-dim); }
+.lb-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-stats { text-align: right; font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
+.lb-stats strong { color: var(--text); font-weight: 800; }
+
+.leaderboard-empty, .leaderboard-loading {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 24px 0;
+}
+
 /* ---------- Landscape / iPad tuning ---------- */
 @media (orientation: landscape) {
-  #screen-game { flex-direction: row; flex-wrap: wrap; }
-  .scoreboard { width: 100%; }
-  .category-bar { width: calc(50% - 18px); }
-  .turn-bar { width: calc(50% - 18px); }
-  .requirement-banner { width: calc(100% - 28px); }
-  .wheel-wrap { width: 100%; }
-  .game-controls { grid-template-columns: repeat(4, 1fr); }
-  .game-controls .btn-danger { grid-column: span 1; }
+  .game-controls { flex-direction: row; }
+  .game-controls-row { grid-template-columns: repeat(3, 1fr); flex: 2; }
+  .game-controls .btn-danger { flex: 1; }
 }

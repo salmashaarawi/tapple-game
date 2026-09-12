@@ -65,10 +65,18 @@
 
   const overlayGame = document.getElementById("overlay-game");
   const gameWinnerText = document.getElementById("game-winner-text");
-  const btnPlayAgain = document.getElementById("btn-play-again");
+  const btnBackToSetup = document.getElementById("btn-back-to-setup");
 
   const overlayPause = document.getElementById("overlay-pause");
   const btnResume = document.getElementById("btn-resume");
+
+  const btnViewLeaderboard = document.getElementById("btn-view-leaderboard");
+  const btnViewLeaderboard2 = document.getElementById("btn-view-leaderboard-2");
+  const overlayLeaderboard = document.getElementById("overlay-leaderboard");
+  const leaderboardListEl = document.getElementById("leaderboard-list");
+  const leaderboardSubEl = document.getElementById("leaderboard-sub");
+  const btnCloseLeaderboard = document.getElementById("btn-close-leaderboard");
+  const btnResetLeaderboard = document.getElementById("btn-reset-leaderboard");
 
   RING_setDasharray();
   function RING_setDasharray() {
@@ -164,8 +172,8 @@
 
   btnStart.addEventListener("click", () => {
     ensureAudio();
-    players.forEach((p) => {
-      p.name = p.name.trim() || p.name;
+    players.forEach((p, idx) => {
+      p.name = p.name.trim() || `Player ${idx + 1}`;
       p.cards = 0;
     });
     settings.timer = parseInt(timerSelect.value, 10);
@@ -279,6 +287,7 @@
     requirementBanner.hidden = requirement <= 1;
     if (requirement > 1) requirementCountEl.textContent = String(requirement - progressThisTurn);
     renderPassButton();
+    wheelEl.classList.toggle("locked", progressThisTurn >= requirement);
   }
 
   function renderPassButton() {
@@ -295,9 +304,9 @@
   }
 
   function computeWheelSize() {
-    const availW = wheelWrapEl.clientWidth - 16;
-    const availH = wheelWrapEl.clientHeight - 16;
-    return Math.max(220, Math.min(availW, availH, 640));
+    const availW = wheelWrapEl.clientWidth - 8;
+    const availH = wheelWrapEl.clientHeight - 8;
+    return Math.max(220, Math.min(availW, availH, 1100));
   }
 
   function renderLetters() {
@@ -344,6 +353,7 @@
   function onLetterTap(letter, btnEl) {
     if (roundOver || paused) return;
     if (usedLetters.has(letter)) return;
+    if (progressThisTurn >= requirement) return;
 
     ensureAudio();
     usedLetters.add(letter);
@@ -428,6 +438,9 @@
     gameWinnerText.textContent = `${winner.name} wins the game! 🎉`;
     playFanfare();
     overlayGame.hidden = false;
+    if (window.Leaderboard) {
+      window.Leaderboard.recordGame(players.map((p) => p.name), winner.name);
+    }
   }
 
   // ---------------- Timer ----------------
@@ -535,10 +548,57 @@
     startRound();
   });
 
-  btnPlayAgain.addEventListener("click", () => {
+  btnBackToSetup.addEventListener("click", () => {
     overlayGame.hidden = true;
-    players.forEach((p) => (p.cards = 0));
-    startGame();
+    quitToSetup();
+  });
+
+  // ---------------- Leaderboard ----------------
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderLeaderboardRows(rows) {
+    leaderboardListEl.innerHTML = "";
+    if (!rows.length) {
+      leaderboardListEl.innerHTML = '<div class="leaderboard-empty">No games played yet.</div>';
+      return;
+    }
+    rows.forEach((r, i) => {
+      const winPct = r.games ? Math.round((r.wins / r.games) * 100) : 0;
+      const row = document.createElement("div");
+      row.className = "leaderboard-row";
+      row.innerHTML = `
+        <span class="lb-rank">#${i + 1}</span>
+        <span class="lb-name">${escapeHtml(r.name)}</span>
+        <span class="lb-stats"><strong>${r.wins}</strong> win${r.wins === 1 ? "" : "s"} · ${r.games} game${r.games === 1 ? "" : "s"} · ${winPct}%</span>
+      `;
+      leaderboardListEl.appendChild(row);
+    });
+  }
+
+  async function openLeaderboard() {
+    overlayLeaderboard.hidden = false;
+    leaderboardSubEl.textContent = window.Leaderboard && window.Leaderboard.isRemote
+      ? "Synced across devices"
+      : "Stored on this device only";
+    leaderboardListEl.innerHTML = '<div class="leaderboard-loading">Loading…</div>';
+    const rows = window.Leaderboard ? await window.Leaderboard.fetchAll() : [];
+    renderLeaderboardRows(rows);
+  }
+
+  btnViewLeaderboard.addEventListener("click", openLeaderboard);
+  btnViewLeaderboard2.addEventListener("click", openLeaderboard);
+  btnCloseLeaderboard.addEventListener("click", () => {
+    overlayLeaderboard.hidden = true;
+  });
+  btnResetLeaderboard.addEventListener("click", () => {
+    if (confirm("Clear the leaderboard scores stored on this device?")) {
+      window.Leaderboard.resetLocal();
+      openLeaderboard();
+    }
   });
 
   // ---------------- Keyboard support (desktop testing) ----------------

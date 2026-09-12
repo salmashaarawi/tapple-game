@@ -57,6 +57,7 @@
       </div>
 
       <button id="btn-start" class="btn btn-primary btn-big" type="button">Start Game</button>
+      <button id="btn-view-leaderboard" class="btn btn-ghost" type="button">🏆 View Leaderboard</button>
     </div>
   </section>
 
@@ -65,16 +66,15 @@
 
     <header class="scoreboard" id="scoreboard"></header>
 
-    <div class="category-bar">
-      <div class="category-label">CATEGORY</div>
-      <div class="category-name" id="category-name">—</div>
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-label">Category</div>
+        <div class="status-value" id="category-name">—</div>
+      </div>
       <button id="btn-new-category" class="btn btn-icon" title="Shuffle category" type="button">🔀</button>
-    </div>
-
-    <div class="turn-bar">
-      <div class="turn-info">
-        <span class="turn-label">Now answering</span>
-        <span class="turn-player" id="turn-player">—</span>
+      <div class="status-item status-item-right">
+        <div class="status-label">Now answering</div>
+        <div class="status-value" id="turn-player">—</div>
       </div>
     </div>
 
@@ -100,9 +100,11 @@
 
     <div class="game-controls">
       <button id="btn-pass-fail" class="btn btn-danger" type="button">This player can't answer</button>
-      <button id="btn-undo" class="btn btn-ghost" type="button">Undo last tap</button>
-      <button id="btn-pause" class="btn btn-ghost" type="button">Pause</button>
-      <button id="btn-quit" class="btn btn-ghost" type="button">End game</button>
+      <div class="game-controls-row">
+        <button id="btn-undo" class="btn btn-ghost" type="button">Undo</button>
+        <button id="btn-pause" class="btn btn-ghost" type="button">Pause</button>
+        <button id="btn-quit" class="btn btn-ghost" type="button">End game</button>
+      </div>
     </div>
   </section>
 
@@ -121,7 +123,19 @@
     <div class="overlay-card">
       <div class="overlay-emoji">🎉</div>
       <h2 id="game-winner-text">Player wins the game!</h2>
-      <button id="btn-play-again" class="btn btn-primary btn-big" type="button">Play Again</button>
+      <button id="btn-view-leaderboard-2" class="btn btn-ghost" type="button">🏆 View Leaderboard</button>
+      <button id="btn-back-to-setup" class="btn btn-primary btn-big" type="button">Back to Setup</button>
+    </div>
+  </div>
+
+  <!-- ============ LEADERBOARD OVERLAY ============ -->
+  <div id="overlay-leaderboard" class="overlay" hidden>
+    <div class="overlay-card leaderboard-card">
+      <h2>🏆 Leaderboard</h2>
+      <p class="leaderboard-sub" id="leaderboard-sub"></p>
+      <div class="leaderboard-list" id="leaderboard-list"></div>
+      <button id="btn-close-leaderboard" class="btn btn-primary btn-big" type="button">Close</button>
+      <button id="btn-reset-leaderboard" class="btn btn-ghost" type="button">Reset scores on this device</button>
     </div>
   </div>
 
@@ -136,7 +150,9 @@
 
 </div>
 
+<script src="config.js"></script>
 <script src="categories.js"></script>
+<script src="leaderboard.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
