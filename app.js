@@ -28,6 +28,32 @@
 
   let audioCtx = null;
 
+  // ---------------- Custom categories ----------------
+  const CUSTOM_CATEGORIES_KEY = "tapple_custom_categories_v1";
+
+  function loadCustomCategories() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CUSTOM_CATEGORIES_KEY));
+      return Array.isArray(saved) ? saved : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCustomCategories() {
+    try {
+      localStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(customCategories));
+    } catch (e) {
+      // localStorage unavailable - custom categories just won't persist
+    }
+  }
+
+  let customCategories = loadCustomCategories();
+
+  function allCategories() {
+    return CATEGORIES.concat(customCategories);
+  }
+
   // ---------------- DOM ----------------
   const screenSetup = document.getElementById("screen-setup");
   const screenGame = document.getElementById("screen-game");
@@ -77,6 +103,15 @@
   const leaderboardSubEl = document.getElementById("leaderboard-sub");
   const btnCloseLeaderboard = document.getElementById("btn-close-leaderboard");
   const btnResetLeaderboard = document.getElementById("btn-reset-leaderboard");
+
+  const btnBrowseCategories = document.getElementById("btn-browse-categories");
+  const overlayCategories = document.getElementById("overlay-categories");
+  const newCategoryInput = document.getElementById("new-category-input");
+  const btnAddCategory = document.getElementById("btn-add-category");
+  const categorySearchInput = document.getElementById("category-search");
+  const categoryBrowseListEl = document.getElementById("category-browse-list");
+  const categoryCountEl = document.getElementById("category-count");
+  const btnCloseCategories = document.getElementById("btn-close-categories");
 
   RING_setDasharray();
   function RING_setDasharray() {
@@ -207,7 +242,7 @@
   }
 
   function pickCategory() {
-    let pool = CATEGORIES.filter((c) => c !== lastCategory);
+    let pool = allCategories().filter((c) => c !== lastCategory);
     const c = pool[Math.floor(Math.random() * pool.length)];
     lastCategory = c;
     return c;
@@ -612,6 +647,78 @@
       window.Leaderboard.resetLocal();
       openLeaderboard();
     }
+  });
+
+  // ---------------- Browse / add categories ----------------
+  function renderCategoryBrowseList(filterText) {
+    const list = allCategories();
+    const needle = filterText.trim().toLowerCase();
+    const filtered = needle ? list.filter((c) => c.toLowerCase().includes(needle)) : list;
+
+    categoryBrowseListEl.innerHTML = "";
+    if (!filtered.length) {
+      categoryBrowseListEl.innerHTML = '<div class="category-empty">No categories match.</div>';
+    } else {
+      filtered.forEach((cat) => {
+        const isCustom = customCategories.includes(cat);
+        const row = document.createElement("div");
+        row.className = "category-row" + (isCustom ? " category-row-custom" : "");
+
+        const name = document.createElement("span");
+        name.className = "category-row-name";
+        name.textContent = cat;
+        row.appendChild(name);
+
+        if (isCustom) {
+          const rm = document.createElement("button");
+          rm.className = "category-row-remove";
+          rm.type = "button";
+          rm.title = "Remove";
+          rm.textContent = "✕";
+          rm.addEventListener("click", () => {
+            customCategories = customCategories.filter((c) => c !== cat);
+            saveCustomCategories();
+            renderCategoryBrowseList(categorySearchInput.value);
+          });
+          row.appendChild(rm);
+        }
+
+        categoryBrowseListEl.appendChild(row);
+      });
+    }
+
+    categoryCountEl.textContent = needle
+      ? `${filtered.length} of ${list.length} categories`
+      : `${list.length} categories`;
+  }
+
+  function addCustomCategory() {
+    const value = newCategoryInput.value.trim();
+    if (!value) return;
+    const exists = allCategories().some((c) => c.toLowerCase() === value.toLowerCase());
+    newCategoryInput.value = "";
+    if (exists) return;
+    customCategories.push(value);
+    saveCustomCategories();
+    categorySearchInput.value = "";
+    renderCategoryBrowseList("");
+  }
+
+  btnBrowseCategories.addEventListener("click", () => {
+    categorySearchInput.value = "";
+    newCategoryInput.value = "";
+    renderCategoryBrowseList("");
+    overlayCategories.hidden = false;
+  });
+  btnCloseCategories.addEventListener("click", () => {
+    overlayCategories.hidden = true;
+  });
+  btnAddCategory.addEventListener("click", addCustomCategory);
+  newCategoryInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addCustomCategory();
+  });
+  categorySearchInput.addEventListener("input", () => {
+    renderCategoryBrowseList(categorySearchInput.value);
   });
 
   // ---------------- Keyboard support (desktop testing) ----------------

@@ -58,6 +58,7 @@
 
       <button id="btn-start" class="btn btn-primary btn-big" type="button">Start Game</button>
       <button id="btn-view-leaderboard" class="btn btn-ghost" type="button">🏆 View Leaderboard</button>
+      <button id="btn-browse-categories" class="btn btn-ghost" type="button">📋 Browse Categories</button>
     </div>
   </section>
 
@@ -138,6 +139,25 @@
       <div class="leaderboard-list" id="leaderboard-list"></div>
       <button id="btn-close-leaderboard" class="btn btn-primary btn-big" type="button">Close</button>
       <button id="btn-reset-leaderboard" class="btn btn-ghost" type="button">Reset scores on this device</button>
+    </div>
+  </div>
+
+  <!-- ============ CATEGORIES OVERLAY ============ -->
+  <div id="overlay-categories" class="overlay" hidden>
+    <div class="overlay-card categories-card">
+      <h2>📋 Categories</h2>
+
+      <div class="category-add-row">
+        <input type="text" id="new-category-input" placeholder="Add your own category…" maxlength="60" />
+        <button id="btn-add-category" class="btn btn-icon" title="Add category" type="button">➕</button>
+      </div>
+
+      <input type="text" id="category-search" class="category-search" placeholder="🔍 Search categories…" />
+
+      <div class="category-browse-list" id="category-browse-list"></div>
+      <p class="category-count" id="category-count"></p>
+
+      <button id="btn-close-categories" class="btn btn-primary btn-big" type="button">Close</button>
     </div>
   </div>
 
