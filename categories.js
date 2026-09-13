@@ -71,4 +71,52 @@ const CATEGORIES = [
   "Summer Activities", "Winter Activities", "Spring Chores", "Fall Traditions", "Things You Do on New Year's Eve",
   "Valentine's Day Gifts", "Mother's Day Gifts", "Father's Day Gifts", "Graduation Gifts", "Baby Shower Gifts",
   "Things You Regift", "Worst Gifts to Receive", "Things in a Gift Basket", "Things You'd Find in a Piñata",
+
+  // Niche & very specific prompts
+  "The Office (US) Characters", "Friends Characters", "Grey's Anatomy Characters", "SpongeBob SquarePants Characters",
+  "The Simpsons Characters", "Family Guy Characters", "South Park Characters", "Rick and Morty Characters",
+  "Avatar: The Last Airbender Characters", "Stranger Things Characters", "Bridgerton Characters", "Gossip Girl Characters",
+  "Real Housewives Franchise Cities", "RuPaul's Drag Race Slang", "Love Island Terms", "Sitcom Catchphrases",
+  "90s Sitcoms", "2000s Nickelodeon Shows", "Disney Channel Original Movies", "Cartoon Network Shows",
+  "Anime Titles", "Studio Ghibli Movies", "A24 Movies",
+  "Wes Anderson Movies", "Quentin Tarantino Movies", "Christopher Nolan Movies", "James Bond Movies",
+  "Fast & Furious Movies", "Horror Movie Franchises", "Rom-Com Titles", "Oscar Best Picture Winners",
+  "Broadway Musicals", "Hamilton Songs", "Disney Villain Songs", "Wicked Characters",
+
+  "Taylor Swift Songs", "Taylor Swift Albums", "Beyoncé Songs", "One Direction Songs",
+  "Boy Bands", "Girl Groups", "K-pop Groups", "90s R&B Groups",
+  "Grammy-Winning Artists", "Christmas Songs", "Wedding First Dance Songs", "Songs About Heartbreak",
+  "Songs With a Color in the Title", "Songs With a Number in the Title", "Eurovision Countries",
+
+  "TikTok Trends", "YouTuber Names", "Twitch Streamer Terms", "Podcast Names",
+  "True Crime Podcasts", "Internet Slang", "Gen Z Slang", "90s Internet Slang",
+  "Reddit Terms", "Things That Trend on Twitter", "Zoom Call Awkward Moments",
+
+  "Trader Joe's Products", "Costco Snacks", "Starbucks Drink Names", "Girl Scout Cookie Flavors",
+  "In-N-Out Menu Items", "Bubble Tea Flavors", "Types of Ramen", "Types of Sushi Rolls",
+  "Types of Tacos", "Types of Whiskey", "Wine Varietals", "Craft Beer Styles",
+  "Types of Hot Sauce", "Diner Menu Items", "State Fair Foods", "Foods on a Stick",
+  "Foods That Are Orange", "Foods That Are Green", "Breakfast Cereal Mascots", "Candy From the 90s",
+
+  "CrossFit Terms", "Peloton Instructor Sayings", "Things a Personal Trainer Says", "Sorority Slang",
+  "Fraternity Stereotypes", "College Dorm Essentials", "Things in a Freshman Dorm Room", "Study Abroad Clichés",
+  "Things at a Renaissance Faire", "Comic-Con Cosplay Ideas", "Escape Room Puzzle Types", "Board Game Mechanics",
+  "D&D Character Classes", "D&D Monsters", "Types of Poker Hands", "Casino Games",
+  "Las Vegas Shows", "Cruise Ship Activities", "Theme Park Ride Types",
+
+  "US State Nicknames", "US State Capitals", "Countries That Border France", "Currencies of the World",
+  "Famous Bridges", "Famous Waterfalls", "National Parks", "Wonders of the World",
+  "Ancient Civilizations", "Types of Government",
+
+  "Types of Clouds", "Layers of the Earth", "Elements on the Periodic Table", "Types of Rocks",
+  "Constellations", "Venomous Animals", "Animals That Hibernate", "Types of Mushrooms",
+  "Poisonous Plants", "Extreme Weather Phenomena",
+
+  "Palindromes", "Compound Words", "Words With Double Letters", "Words That Start and End With the Same Letter",
+  "Silent Letter Words", "Onomatopoeia", "Idioms About Animals", "Phrases That Mean 'Crazy'",
+  "Ways to Say 'Tired'", "Ways to Say 'Delicious'", "British Words for American Things", "Australian Slang",
+
+  "Things at a Silent Disco", "Things at a Rave", "Things at a Tailgate Party", "Things at a Quinceañera",
+  "Things at a Bar Mitzvah", "Things a Best Man Says in a Speech", "Things at a Drive-In Movie",
+  "Things at a Flea Market", "Things at a Comic Convention",
 ];
