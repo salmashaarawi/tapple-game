@@ -306,7 +306,7 @@
   function computeWheelSize() {
     const availW = wheelWrapEl.clientWidth - 8;
     const availH = wheelWrapEl.clientHeight - 8;
-    return Math.max(220, Math.min(availW, availH, 1100));
+    return Math.max(160, Math.min(availW, availH, 1100));
   }
 
   function renderLetters() {
@@ -503,8 +503,21 @@
     if (roundOver || paused || history.length === 0) return;
     const letter = history.pop();
     usedLetters.delete(letter);
-    progressThisTurn = Math.max(0, progressThisTurn - 1);
+
+    if (progressThisTurn > 0) {
+      // undoing a tap the current player made earlier this turn
+      progressThisTurn--;
+    } else {
+      // current player hasn't answered yet this turn, so this letter
+      // belongs to whoever passed the turn to them - give it back
+      turnPointer = (turnPointer - 1 + turnOrder.length) % turnOrder.length;
+      progressThisTurn = Math.max(0, requirement - 1);
+      resetTimer();
+      startTimer();
+    }
+
     renderLetters();
+    renderScoreboard();
     renderTurn();
   });
 

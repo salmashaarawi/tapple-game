@@ -40,14 +40,14 @@ button {
 }
 
 #app {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
   flex-direction: column;
 }
 
-.screen { display: none; flex: 1; flex-direction: column; }
+.screen { display: none; flex: 1; flex-direction: column; min-height: 0; overflow-y: auto; }
 .screen.active { display: flex; }
 
 /* ---------- Setup screen ---------- */
@@ -200,6 +200,14 @@ button {
 }
 
 /* ---------- Game screen ---------- */
+.game-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  flex: none;
+}
+
 .scoreboard {
   display: flex;
   gap: 6px;
